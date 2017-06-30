@@ -15,6 +15,10 @@ const router = new VueRouter({
       path: '/sign',
       component: resolve => { require(['../components/sign'], resolve) },
       children: sign
+    },
+    {
+      path: '/view',
+      component: resolve => { require(['../components/template'], resolve) }
     }
   ]
 })

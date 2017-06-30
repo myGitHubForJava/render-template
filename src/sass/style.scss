@@ -1,0 +1,384 @@
+html,body {
+	height: 100% !important;
+	overflow: auto !important;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+.container {
+  height: 100%;
+  overflow-y: scroll;
+}
+.content {
+  position: relative;
+}
+//navbar
+.nav-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 99;
+  box-shadow: 1px 0 1px 1px rgab(0,0,0,0.3);
+  border-bottom: 1px solid #eeeeee;
+
+//4个及以下
+  .nav-ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    height: 80px;
+    justify-content: flex-start;
+    position: relative;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+
+    .nav-li {
+      flex: 1 0 auto;
+      text-align: center;
+    }
+
+    a {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+  }
+  //4个以上
+  .isMore {
+    flex-wrap: nowrap;
+    width: calc(100% - 80px);
+    overflow-x: auto;
+
+    .nav-li-more {
+      text-align: center;
+      flex: 0 0 calc(25% + 20px);
+    }
+    .nav-text {
+      text-align: center;
+      line-height: 80px;
+      font-size: 25px;
+      color: #666666;
+      margin: 0 auto;
+    }
+  }
+
+  .nav-item {
+    color: #666666;
+    font-size: 20px;
+    height: 79px;
+    line-height: 80px;
+  }
+  .nav-item-active {
+    color: #ff718e;
+    border-bottom: 1px solid #ff718e;
+  }
+
+
+  .drop-down {
+    width: 80px;
+    height: 80px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    border-left: 1px solid #eeeeee;
+    box-shadow: -1px -1px 2px 0px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    z-index: 999;
+
+    .mn-icon {
+      fill: #ff718e;
+    }
+  }
+
+  .nav-dropdown {
+    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    justify-content: flex-start;
+
+    .nav-dropdown-li {
+      width: 33.333%;
+      text-align: center;
+      height: 80px;
+
+      .nav-dropdown-item {
+        color: #666666;
+        font-size: 20px;
+        line-height: 80px;
+      }
+      .active {
+        color: #ff718e;
+      }
+    }
+  }
+}
+//头图
+.header-img {
+  width: 100%;
+  margin: 0;
+  padding: 180px 0 0;
+
+  img {
+    width: 100%;
+  }
+}
+//轮播图
+.img-play {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  img {
+    width: 100%;
+  }
+}
+//单个商品
+.hot-items {
+  background: {
+    color: #fff;
+    // image: ;
+    // size: ;
+    // position: ;
+    // repeat: ;
+  }
+
+  .hot-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
+
+    &-img {
+      width: 48%;
+      position: relative;
+
+      img {
+        border-radius: 20px;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &-info {
+      width: 52%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .item-info-title h2{
+        color: #333333;
+        font-size: 0.4rem;
+        font-weight: 500;
+      }
+
+      .item-info-subtitle {
+        margin-top: 0;
+
+        ul {
+          list-style: none;
+          position: relative;
+
+          li {
+            font-size: 0.4rem;
+            color: #aaaaaa;
+            padding-left: 30px;
+
+            &:before{
+              content: '';
+              display: block;
+              border-radius: 50%;
+              position: absolute;
+              color: #aaa;
+              left: 0;
+              border: 5px solid #aaa;
+              top: 0.2rem;
+            }
+          }
+        }
+      }
+
+      .item-info-price {
+
+        .old-price {
+          color: #aaaaaa;
+          text-decoration: line-through;
+          font-size: 0.3rem;
+        }
+
+        .new-price {
+          color: #F05423;
+          font-size: 0.4rem;
+
+          &-big {
+            font-size: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+//多个商品
+.normal-items {
+  background: {
+    color: #81CDFF;
+    // image: ;
+    // position: ;
+    // size: ;
+    // repeat: ;
+  }
+  margin: 0;
+  padding: 0;
+
+  .item-ul {
+    padding: 5% 1% 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .item-li{
+      border-radius: 20px;
+      background-color: #fff;
+      position: relative;
+      margin: 10px 0;
+
+      .item-img {
+        width: 100%;
+
+        img {
+          border-radius: 20px;
+          width: 100%;
+        }
+      }
+
+      .item-info {
+        margin-bottom: 5%;
+        margin-left: 5%;
+
+        &-title {
+          height: 1.8rem;
+          color: #6B6B6B;
+          font-size: 0.4rem;
+          font-weight: 400;
+        }
+
+        &-price {
+          .old-price{
+            color: #aaaaaa;
+            text-decoration: line-through;
+            font-size: 0.35rem;
+          }
+
+          .new-price {
+            color: #F05423;
+            font-size: 0.4rem;
+
+            .new-price-big {
+              font-size: 0.6rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.col-12 {
+  width: 99%
+}
+.col-6 {
+  width: 49%;
+}
+.col-3 {
+  width: 24%;
+}
+.col-4 {
+  width: 32.333%
+}
+.hot-item-right {
+  flex-direction: row-reverse !important;
+}
+.item-tag {
+  padding: 0 10px;
+  position: absolute;
+  background-color: #F05423;
+  border: {
+    top-right-radius: 36px;
+    bottom-right-radius: 36px;
+    top-left-radius: 20px;
+  }
+
+  &-text {
+    font-size: 0.3rem;
+    color: #fff;
+    line-height: 0.3rem;
+  }
+}
+.cart {
+  display: block;
+  position: absolute;
+  bottom: 2%;
+  right: 5%;
+  width: 0.85rem;
+  height: 0.85rem;
+  background-color: #F05423;
+  border-radius: 10px;
+
+  .mn-icon {
+    color: #ffffff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-55%,-45%);
+    width: 0.6rem !important;
+    height: 0.6rem !important;
+  }
+}
+img {
+  display: block;
+  width: 100%;
+}
+a {
+  text-decoration: none;
+}
+.to-top {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.5);
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  display: none;
+  text-align: center;
+  z-index: 999;
+
+  .mn-icon {
+    fill: rgba(255,255,255,0.8);
+    margin-top: 8px;
+  }
+}
+
+.mn-carousel-indicators {
+  bottom: 0.2rem !important;
+}
+.mn-carousel-indicator {
+  width: 0.3rem !important;
+  height: 0.3rem !important;
+}
+.mn-carousel-indicator.is-active {
+  width: 0.4rem !important;
+  height: 0.4rem !important;
+}
+
+.loading-text {
+  text-align: center;
+  line-height: 100vh;
+  font-size: 30px;
+}
