@@ -7,18 +7,30 @@
           <div class="item-tag">
             <span class="item-tag-text">{{ item.tip }}</span>
           </div>
-          <img :src="skusInfo[item.sku].newImageURL">
+          <img :data-src="skusInfo[item.sku].newImageURL" v-if="skusInfo[item.sku]" :class="['lazy-load']" src="../../assets/loading_1.jpg">
+          <img src="../../assets/loading_1.jpg" v-else>
         </div>
         <div class="item-info">
-          <div class="item-info-title">
+          <div class="item-info-title" v-if="skusInfo[item.sku]">
           {{ skusInfo[item.sku].Name }}
           </div>
-          <div class="item-info-price">
+          <div class="item-info-title" v-else>
+          sku错误
+          </div>
+          <div class="item-info-price" v-if="skusInfo[item.sku]">
             <div class="old-price">
               {{ skusInfo[item.sku].price2 }}
             </div>
             <div class="new-price">
               <span class="new-price-big">{{ skusInfo[item.sku].price.split('.')[0] }}</span>.{{ skusInfo[item.sku].price.split('.')[1] }}
+            </div>
+          </div>
+          <div class="item-info-price" v-else>
+            <div class="old-price">
+              00.00
+            </div>
+            <div class="new-price">
+              <span class="new-price-big">00</span>.00
             </div>
           </div>
           <div class="cart">
@@ -34,7 +46,7 @@
         <div class="item-tag">
           <span class="item-tag-text">{{ data.items[0].tip }}</span>
         </div>
-        <img src="http://images4sz-app.34580.com/images/ProductImages/SH_Image_46272_jpeg_100.jpeg">
+        <img data-src="../../assets/loading_1.jpg" :class="['lazy-load']">
       </div>
       <div class="item-info">
         <div class="item-info-title">
@@ -103,7 +115,7 @@ export default {
       return str
     },
     calcHref (item) {
-      if (this.skusInfo) {
+      if (this.skusInfo && this.skusInfo[item.sku]) {
         return 'http://m.34580.com/good.info/' + this.skusInfo[item.sku].href.split('/')[2]
       } else {
         return undefined

@@ -5692,6 +5692,10 @@ vue-i18n@^5.0.3:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-5.0.3.tgz#b6d96cc832604237e6139de471e0d4c820aedbed"
 
+vue-lazyload@^1.0.6:
+  version "1.0.6"
+  resolved "http://registry.npm.taobao.org/vue-lazyload/download/vue-lazyload-1.0.6.tgz#7d5494fc35c35fc84dcc271165b827e309b4e793"
+
 vue-loader@^11.3.4:
   version "11.3.4"
   resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-11.3.4.tgz#65e10a44ce092d906e14bbc72981dec99eb090d2"

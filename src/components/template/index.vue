@@ -1,54 +1,57 @@
 <template>
-  <div class="container" id="container" :style="backStyle">
-    <div :class="['content']" v-if="isShow">
-      <div :class="['items']" v-for="(item, index) of config.data" :key="index">
-        <!-- tab -->
-        <nav-menu :navList="item.items" :color="item.color" :activeColor="item.activeColor"
-          @goTo="goTo" v-if="item.type==='tab'"></nav-menu>
-        <!-- image -->
-        <div
-          :class="['header-image']"
-          v-if="item.type==='image'"
-          :style="calcMargin(item)"
-        >
-          <a :href="item.url" v-if="item.url" alt="headimage"><img :src="item.src"></a>
-          <img :src="item.src" v-else alt="headimage">
-        </div>
-        <!-- banner -->
-        <div class="banner" v-if="item.type==='banner'" :style="calcMargin(item)">
-          <mn-carousel v-if="item.items.length>1">
-            <mn-carousel-item v-for="data of item.items" :key="data">
-              <a v-if="data.url" :href="data.url"><img :src="data.src"></a>
-              <img :src="data.src" v-else>
-            </mn-carousel-item>
-          </mn-carousel>
-          <div class="banner-img" v-else>
-            <a :href="item.items[0].url" v-if="item.items[0].url"><img :src="item.items[0].src"></a>
-            <img :src="item.items[0].src" v-else>
+  <mn-scroller @scroll="scrolling">
+    <div class="container" id="container" :style="backStyle">
+      <div :class="['content']" v-if="isShow">
+        <div :class="['items']" v-for="(item, index) of config.data" :key="index">
+          <!-- tab -->
+          <nav-menu :navList="item.items" :color="item.color" :activeColor="item.activeColor"
+            @goTo="goTo" :active="activeNav" @changeActive="changeActive" v-if="item.type==='tab'"></nav-menu>
+          <!-- image -->
+          <div
+            :class="['header-image']"
+            v-if="item.type==='image'"
+            :style="calcMargin(item)"
+          >
+            <a :href="item.url" v-if="item.url" alt="headimage"><img :src="item.src"></a>
+            <img :src="item.src" v-else alt="headimage">
           </div>
-        </div>
-        <!-- product -->
-        <product :data="item" v-if="item.type==='product'" :skusInfo="skusinfo"></product>
-        <!-- products -->
-        <products :data="item" v-if="item.type==='products'" :skusInfo="skusinfo"></products>
-        <!-- button -->
-        <div class="footer" v-if="item.type==='button'">
-          <div class="to-top" @click="backToTop" id="toTop">
-            <mn-icon :name="icons.arrowUp" :width="60" :height="60"></mn-icon>
+          <!-- banner -->
+          <div class="banner" v-if="item.type==='banner'" :style="calcMargin(item)">
+            <mn-carousel v-if="item.items.length>1">
+              <mn-carousel-item v-for="data of item.items" :key="data">
+                <a v-if="data.url" :href="data.url"><img :src="data.src"></a>
+                <img :src="data.src" v-else>
+              </mn-carousel-item>
+            </mn-carousel>
+            <div class="banner-img" v-else>
+              <a :href="item.items[0].url" v-if="item.items[0].url"><img :src="item.items[0].src"></a>
+              <img :src="item.items[0].src" v-else>
+            </div>
+          </div>
+          <!-- product -->
+          <product :data="item" v-if="item.type==='product'" :skusInfo="skusinfo"></product>
+          <!-- products -->
+          <products :data="item" v-if="item.type==='products'" :skusInfo="skusinfo"></products>
+          <!-- button -->
+          <div class="footer" v-if="item.type==='button'">
+            <div class="to-top" @click="backToTop" id="toTop">
+              <mn-icon :name="icons.arrowUp" :width="60" :height="60"></mn-icon>
+            </div>
           </div>
         </div>
       </div>
+      <div v-else class="loading-text">
+        <mn-loading-icon></mn-loading-icon>loading...
+      </div>
     </div>
-    <div v-else class="loading-text">
-      <mn-loading-icon></mn-loading-icon>loading...
-    </div>
-  </div>
+  </mn-scroller>
 </template>
 
 <script>
   import {showTemplate} from '../../axios/template'
   import NavMenu from './nav'
   import carousel from 'vue-human/suites/carousel'
+  import scroller from 'vue-human/suites/scroller'
   import product from './product'
   import products from './products'
 
@@ -64,12 +67,16 @@
         isShow: false,
         timer: null,
         start: null,
-        timer2: null
+        timer2: null,
+        activeNav: undefined,
+        ids: [],
+        count: 0
       }
     },
     components: {
       NavMenu,
       ...carousel.map(),
+      ...scroller.map(),
       product,
       products
     },
@@ -77,16 +84,21 @@
       return showTemplate(this.$route.query.id, this.$route.query.city).then(response => {
         this.skusinfo = response.data.JsonData.skusinfo
         this.config = JSON.parse(response.data.JsonData.data)
-        Object.keys(this.config.data).forEach(key => {
-          if (this.config.data[key].cartIcon) {
-            document.getElementById('container').addEventListener('scroll', () => {
-              this.debounce(this.handleScronll)()
-            })
-          }
-        })
-        console.log(this.config)
+        // Object.keys(this.config.data).forEach(key => {
+        //   if (this.config.data[key].cartIcon) {
+        //     document.getElementById('container').addEventListener('scroll', () => {
+        //       this.debounce(this.handleScronll)()
+        //     })
+        //   }
+        //   document.getElementById('container').addEventListener('scroll', () => {
+        //     this.debounce(this.handleScronll)()
+        //     console.log(222)
+        //   })
+        // })
+        console.log(1, this.config)
         console.log(this.skusinfo)
         this.isShow = true
+        this.onInit()
       }).catch(error => {
         console.log(error)
       })
@@ -99,7 +111,6 @@
           this.config.data.forEach(key => {
             if (key.type === 'other') {
               obj = key
-              window.document.title = obj.title
             }
           })
           str += `background-color: ${obj.background.color};`
@@ -112,6 +123,37 @@
       }
     },
     methods: {
+      Observe () {
+        this.$nextTick(() => {
+          let imgs = document.querySelectorAll('.lazy-load')
+          Array.from(imgs).forEach(el => {
+            if ((!!el.getAttribute('data-src')) && this.isInsight(el)) {
+              this.loadImg(el)
+            }
+          })
+        })
+      },
+      isInsight (el) {
+        let obj = el.getBoundingClientRect()
+        let clientHeight = window.innerHeight
+        return obj.top <= clientHeight + 100
+      },
+      loadImg (el) {
+        el.src = el.getAttribute('data-src')
+        el.removeAttribute('data-src')
+      },
+      onInit () {
+        this.config.data.forEach(key => {
+          if (key.type === 'other') {
+            window.document.title = key.title
+          } else if (key.type === 'tab') {
+            key.items.forEach(val => {
+              this.ids.push(val.target)
+            })
+          }
+        })
+        this.Observe()
+      },
       calcMargin (data) {
         let str = ''
         let margin = []
@@ -136,11 +178,13 @@
       },
       goTo (val) {
         let target = document.getElementById(val)
-        let preNode = target.parentNode.nextSibling.children[0]
-        if (preNode.className === 'banner') {
-          this.animate(target.offsetTop - preNode.offsetHeight - 80, 300)
-        } else {
-          this.animate(target.offsetTop - 80, 300)
+        if (target) {
+          let preNode = target.parentNode.previousSibling.children[0]
+          if (preNode.className === 'banner') {
+            this.animate(target.offsetTop - preNode.offsetHeight - 80, 300)
+          } else {
+            this.animate(target.offsetTop - 80, 300)
+          }
         }
       },
       debounce (func) {
@@ -149,7 +193,7 @@
           if (!this.start) {
             this.start = now
           }
-          if (now - this.start > 1000) {
+          if (now - this.start > 500) {
             func()
             this.start = now
             clearTimeout(this.timer)
@@ -158,18 +202,18 @@
             this.timer = setTimeout(() => {
               func()
               this.start = null
-            }, 500)
+            }, 300)
           }
         }
       },
       handleScronll () {
-        let node = document.getElementById('container')
+        let node = document.getElementsByClassName('mn-scroller')[0]
         let topNode = document.getElementById('toTop')
         let tab = document.getElementById('tab')
-        let afterTab = tab.parentNode.nextSibling
+        let windowHeight = window.screen.height
         let afterTabTop = 0
         if (topNode) {
-          if (node.scrollTop >= window.screen.height) {
+          if (node.scrollTop >= windowHeight) {
             topNode.style.display = 'block'
           } else {
             topNode.style.display = 'none'
@@ -177,16 +221,24 @@
         }
         // tab
         if (tab) {
-          afterTabTop = afterTab.offsetTop
-          if (afterTabTop - tab.offsetHeight <= node.scrollTop) {
+          afterTabTop = tab.parentNode.offsetTop
+          if (afterTabTop <= node.scrollTop) {
             tab.className = 'nav-menu isFixed'
           } else {
             tab.className = 'nav-menu'
           }
+          // 导航随滚动而移动
+          this.ids.forEach((val, index) => {
+            let targetNodeTop = document.getElementById(val).offsetTop
+            if (targetNodeTop <= node.scrollTop + windowHeight * 2) {
+              this.activeNav = index
+            }
+          })
         }
+        this.Observe()
       },
       animate (end, time) {
-        let container = document.getElementById('container')
+        let container = document.getElementsByClassName('mn-scroller')[0]
         let scroll = end - container.scrollTop
         let startTime = Date.now()
         let percent = null
@@ -202,6 +254,12 @@
             container.scrollTop = end
           }
         }, 13)
+      },
+      scrolling (e, t) {
+        this.debounce(this.handleScronll)()
+      },
+      changeActive (val) {
+        this.activeNav = val
       }
     }
 }
@@ -211,7 +269,6 @@
   .container {
     width: 100%;
     height: 100%;
-    overflow-y: auto;
     transition: 3s;
 
     .content {

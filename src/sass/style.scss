@@ -1,43 +1,60 @@
 html,body {
-	height: 100% !important;
-	overflow: auto !important;
+  height: 100% !important;
+  overflow: auto !important;
 }
 * {
   margin: 0;
   padding: 0;
 }
 .container {
-  height: 100%;
-  overflow-y: scroll;
+  /* height: 100%;*/
+  /* overflow-y: scroll;*/
 }
 .content {
   position: relative;
 }
-//navbar
+/*navbar*/
 .nav-menu {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
   background-color: #fff;
   z-index: 99;
-  box-shadow: 1px 0 1px 1px rgab(0,0,0,0.3);
+  -webkit-box-shadow: 1px 0 1px 1px rgab(0,0,0,0.3);
+          box-shadow: 1px 0 1px 1px rgab(0,0,0,0.3);
   border-bottom: 1px solid #eeeeee;
 
-//4个及以下
+/*4个及以下*/
   .nav-ul {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
     list-style: none;
-    height: 80px;
-    justify-content: flex-start;
+    height: 1.25rem;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
     position: relative;
     border-bottom: 1px solid rgba(0,0,0,0.1);
 
+    &::-webkit-scrollbar {
+      height: 0;
+      width: 0;
+    }
+
     .nav-li {
-      flex: 1 0 auto;
+      -webkit-box-flex: 1;
+          -ms-flex: 1 0 auto;
+              flex: 1 0 auto;
       text-align: center;
+      height: 100%
     }
 
     a {
@@ -46,20 +63,30 @@ html,body {
         height: 100%;
       }
   }
-  //4个以上
+  /*4个以上*/
   .isMore {
-    flex-wrap: nowrap;
-    width: calc(100% - 80px);
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    width: calc(100% - 1.25rem);
+    overflow: hidden;
     overflow-x: auto;
 
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
     .nav-li-more {
+      height: 100%;
       text-align: center;
-      flex: 0 0 calc(25% + 20px);
+      -webkit-box-flex: 0;
+          -ms-flex: 0 0 calc(25% + 20px);
+              flex: 0 0 calc(25% + 20px);
     }
     .nav-text {
       text-align: center;
-      line-height: 80px;
-      font-size: 25px;
+      line-height: 1.25rem;
+      font-size: 0.39rem;
       color: #666666;
       margin: 0 auto;
     }
@@ -67,9 +94,9 @@ html,body {
 
   .nav-item {
     color: #666666;
-    font-size: 20px;
-    height: 79px;
-    line-height: 80px;
+    font-size: 0.31rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
   }
   .nav-item-active {
     color: #ff718e;
@@ -78,37 +105,51 @@ html,body {
 
 
   .drop-down {
-    width: 80px;
-    height: 80px;
+    width: 1.25rem;
+    height: 1.25rem;
     top: 0;
     right: 0;
     position: absolute;
     border-left: 1px solid #eeeeee;
-    box-shadow: -1px -1px 2px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: -1px -1px 2px 0px rgba(0,0,0,0.1);
+            box-shadow: -1px -1px 2px 0px rgba(0,0,0,0.1);
     border-bottom: 1px solid rgba(0,0,0,0.1);
     z-index: 999;
 
     .mn-icon {
+      width: 1rem !important;
+      height: 1rem !important;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+              transform: translate(-50%, -50%);
       fill: #ff718e;
     }
   }
 
   .nav-dropdown {
     display: none;
-    flex-direction: row;
-    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
     list-style: none;
-    justify-content: flex-start;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
 
     .nav-dropdown-li {
       width: 33.333%;
       text-align: center;
-      height: 80px;
+      height: 1.25rem;
 
       .nav-dropdown-item {
         color: #666666;
-        font-size: 20px;
-        line-height: 80px;
+        font-size: 0.31rem;
+        line-height: 1.25rem;
       }
       .active {
         color: #ff718e;
@@ -116,17 +157,17 @@ html,body {
     }
   }
 }
-//头图
+/*头图*/
 .header-img {
   width: 100%;
   margin: 0;
-  padding: 180px 0 0;
+  padding: 2.81rem 0 0;
 
   img {
     width: 100%;
   }
 }
-//轮播图
+/*轮播图*/
 .img-play {
   width: 100%;
   margin: 0;
@@ -136,20 +177,27 @@ html,body {
     width: 100%;
   }
 }
-//单个商品
+/*单个商品*/
 .hot-items {
   background: {
     color: #fff;
-    // image: ;
-    // size: ;
-    // position: ;
-    // repeat: ;
+    /* image: ;*/
+    /* size: ;*/
+    /* position: ;*/
+    /* repeat: ;*/
   }
 
   .hot-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     cursor: pointer;
 
     &-img {
@@ -166,9 +214,16 @@ html,body {
     &-info {
       width: 52%;
       position: relative;
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
 
       .item-info-title h2{
         color: #333333;
@@ -186,7 +241,7 @@ html,body {
           li {
             font-size: 0.4rem;
             color: #aaaaaa;
-            padding-left: 30px;
+            padding-left: 0.47rem;
 
             &:before{
               content: '';
@@ -222,14 +277,14 @@ html,body {
     }
   }
 }
-//多个商品
+/*多个商品*/
 .normal-items {
   background: {
     color: #81CDFF;
-    // image: ;
-    // position: ;
-    // size: ;
-    // repeat: ;
+    /* image: ;*/
+    /* position: ;*/
+    /* size: ;*/
+    /* repeat: ;*/
   }
   margin: 0;
   padding: 0;
@@ -237,16 +292,24 @@ html,body {
   .item-ul {
     padding: 5% 1% 0;
     list-style: none;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
 
     .item-li{
       border-radius: 20px;
       background-color: #fff;
       position: relative;
-      margin: 10px 0;
+      margin: 0.16rem 0;
 
       .item-img {
         width: 100%;
@@ -302,16 +365,19 @@ html,body {
   width: 32.333%
 }
 .hot-item-right {
-  flex-direction: row-reverse !important;
+  -webkit-box-orient: horizontal !important;
+  -webkit-box-direction: reverse !important;
+      -ms-flex-direction: row-reverse !important;
+          flex-direction: row-reverse !important;
 }
 .item-tag {
-  padding: 0 10px;
+  padding: 0 0.16rem;
   position: absolute;
   background-color: #F05423;
   border: {
-    top-right-radius: 36px;
-    bottom-right-radius: 36px;
-    top-left-radius: 20px;
+    top-right-radius: 0.56rem;
+    bottom-right-radius: 0.56rem;
+    top-left-radius: 0.31rem;
   }
 
   &-text {
@@ -335,7 +401,8 @@ html,body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-55%,-45%);
+    -webkit-transform: translate(-55%,-45%);
+            transform: translate(-55%,-45%);
     width: 0.6rem !important;
     height: 0.6rem !important;
   }
@@ -348,8 +415,8 @@ a {
   text-decoration: none;
 }
 .to-top {
-  width: 80px;
-  height: 80px;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 50%;
   background-color: rgba(0,0,0,0.5);
   position: fixed;
@@ -361,7 +428,13 @@ a {
 
   .mn-icon {
     fill: rgba(255,255,255,0.8);
-    margin-top: 8px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    width: 0.94rem !important;
+    height: 0.94rem !important;
   }
 }
 
@@ -380,5 +453,5 @@ a {
 .loading-text {
   text-align: center;
   line-height: 100vh;
-  font-size: 30px;
+  font-size: 0.47rem;
 }

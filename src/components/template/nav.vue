@@ -1,33 +1,33 @@
 <template>
 <div :class="['nav-menu']" id="tab">
   <ul :class="['nav-ul']" v-if="navList.length<=4">
-    <li v-for="item of navList" :class="['nav-li']">
-      <a :class="['nav-item']" @click="navClick($event, item.target)" name="nav">
+    <li v-for="(item, index) of navList" :class="['nav-li']">
+      <a :class="['nav-item', {'nav-item-active' : active === index}]" @click="navClick($event, item.target)" name="nav">
       {{ item.text }}
       </a>
     </li>
   </ul>
-  <ul v-if="!navShow&&navList.length>4" :class="['nav-ul', {'isMore': navList.length>4}]">
-    <li v-for="item of navList" :class="['nav-li-more']">
-      <a :class="['nav-item']" @click="navClick($event, item.target)" name="nav"
+  <ul v-if="navList.length>4" :class="['nav-ul', {'isMore': navList.length>4}]">
+    <li v-for="(item, index) of navList" :class="['nav-li-more']">
+      <a :class="['nav-item', {'nav-item-active' : active === index}]" @click="navClick(index, item.target)" name="nav"
         :style="{'color': color,'border-bottom-color': activeColor}">
       {{ item.text }}
       </a>
     </li>
   </ul>
-  <ul v-if="navShow&&navList.length>4" :class="['nav-ul', 'isMore']">
+  <!-- <ul v-if="navShow&&navList.length>4" :class="['nav-ul', 'isMore']">
     <div :class="['nav-text']">切换楼层</div>
-  </ul>
+  </ul> -->
   <div :class="['drop-down']" @click="openNav" v-if="navList.length>4">
-    <mn-icon :name="icons.arrowDown" :width="80" :height="80" v-if="arrowDown" :style="{'fill': activeColor}"></mn-icon>
-    <mn-icon :name="icons.arrowUp" :width="80" :height="80" v-else :style="{'fill': activeColor}"></mn-icon>
+    <mn-icon :name="icons.arrowDown" v-if="arrowDown" :style="{'fill': activeColor}"></mn-icon>
+    <mn-icon :name="icons.arrowUp" v-else :style="{'fill': activeColor}"></mn-icon>
   </div>
   <ul :class="['nav-dropdown']" id="dropdownul">
-    <li v-for="item of navList" :class="['nav-dropdown-li']">
-      <div :class="['nav-dropdown-item']" @click="dropdownClick($event, item.target)" name="dropDownNav"
+    <li v-for="(item, index) of navList" :class="['nav-dropdown-li']">
+      <a :class="['nav-item']" @click="dropdownClick(index, item.target)" name="dropDownNav"
         :style="{'color': color}">
       {{ item.text }}
-      </div>
+      </a>
     </li>
   </ul>
 </div>
@@ -48,17 +48,15 @@
     props: [
       'navList',
       'color',
-      'activeColor'
+      'activeColor',
+      'active'
     ],
     methods: {
-      navClick (e, target) {
-        let nodes = document.getElementsByName('nav')
-        nodes.forEach(key => {
-          key.className = 'nav-item'
-          key.style.color = this.color
-        })
-        e.target.className = 'nav-item nav-item-active'
-        e.target.style.color = this.activeColor
+      navClick (index, target) {
+        if (this.navShow) {
+          this.openNav()
+        }
+        this.$emit('changeActive', index)
         this.$emit('goTo', target)
       },
       openNav () {
@@ -70,18 +68,32 @@
           document.getElementById('dropdownul').style.display = 'none'
         }
       },
-      dropdownClick (e, target) {
-        let nodess = document.getElementsByName('dropDownNav')
-        nodess.forEach(key => {
-          key.className = 'nav-dropdown-item'
-        })
-        e.target.className = 'nav-dropdown-item active'
-        this.$emit('goTo', target)
+      dropdownClick (index, target) {
         this.openNav()
+        this.$emit('changeActive', index)
+        this.$emit('goTo', target)
+      }
+    },
+    watch: {
+      active: function () {
+        let nodeLists = document.getElementsByClassName('nav-item')
+        nodeLists = Array.prototype.slice.call(nodeLists)
+        let len = nodeLists.length / 2
+        nodeLists.forEach((val, index) => {
+          if (this.active === index || (this.active + len) === index) {
+            val.style.color = this.activeColor
+            val.style.borderBottomColor = this.activeColor
+          } else {
+            val.style.color = this.color
+          }
+        })
+        // 滚动到中间
+        let scrollUl = document.getElementsByClassName('nav-ul')[0]
+        scrollUl.scrollLeft = nodeLists[this.active].offsetLeft
       }
     },
     mounted () {
-      document.getElementById('tab').parentNode.style.height = '80px'
+      document.getElementById('tab').parentNode.style.height = '1.25rem'
     }
   }
 </script>
