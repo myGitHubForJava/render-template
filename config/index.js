@@ -31,6 +31,10 @@ module.exports = {
       '/sale': {
         target: 'http://10.1.3.48:9013',
         changeOrigin: true
+      },
+      '/port': {
+        target: 'https://wechat.34580.com',
+        changeOrigin: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

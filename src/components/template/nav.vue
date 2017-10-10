@@ -78,15 +78,17 @@
       active: function () {
         let nodeLists = document.getElementsByClassName('nav-item')
         nodeLists = Array.prototype.slice.call(nodeLists)
-        let len = nodeLists.length / 2
+        // let len = nodeLists.length / 2
         nodeLists.forEach((val, index) => {
-          if (this.active === index || (this.active + len) === index) {
-            val.style.color = this.activeColor
-            val.style.borderBottomColor = this.activeColor
-          } else {
-            val.style.color = this.color
-          }
+          // if (this.active === index || (this.active + len) === index) {
+          //   val.style.color = this.activeColor
+          //   val.style.borderBottomColor = this.activeColor
+          // } else {
+          //   val.style.color = this.color
+          // }
+          val.style.color = this.color
         })
+        nodeLists[this.active].style.color = this.activeColor
         // 滚动到中间
         let scrollUl = document.getElementsByClassName('nav-ul')[0]
         scrollUl.scrollLeft = nodeLists[this.active].offsetLeft

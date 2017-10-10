@@ -22,3 +22,10 @@ export function editTemplate (data = {}, id = {}) {
     data: data
   })
 }
+
+export function getWxConfig (url = {}) {
+  return axios({
+    method: 'GET',
+    url: `/port/getJssdk?url=${url}`
+  })
+}

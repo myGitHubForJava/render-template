@@ -1,5 +1,5 @@
 <template>
-  <mn-scroller @scroll="scrolling">
+  <mn-scroller @scroll="scrolling" v-if="config">
     <div class="container" id="container" :style="backStyle">
       <div :class="['content']" v-if="isShow">
         <div :class="['items']" v-for="(item, index) of config.data" :key="index">
@@ -48,12 +48,13 @@
 </template>
 
 <script>
-  import {showTemplate} from '../../axios/template'
+  import {showTemplate, getWxConfig} from '../../axios/template'
   import NavMenu from './nav'
   import carousel from 'vue-human/suites/carousel'
   import scroller from 'vue-human/suites/scroller'
   import product from './product'
   import products from './products'
+  import wx from 'weixin-js-sdk'
 
   export default {
     data () {
@@ -70,7 +71,10 @@
         timer2: null,
         activeNav: undefined,
         ids: [],
-        count: 0
+        count: 0,
+        imgs: undefined,
+        wxShare: {},
+        shareData: {}
       }
     },
     components: {
@@ -82,23 +86,21 @@
     },
     mounted () {
       return showTemplate(this.$route.query.id, this.$route.query.city).then(response => {
-        this.skusinfo = response.data.JsonData.skusinfo
-        this.config = JSON.parse(response.data.JsonData.data)
-        // Object.keys(this.config.data).forEach(key => {
-        //   if (this.config.data[key].cartIcon) {
-        //     document.getElementById('container').addEventListener('scroll', () => {
-        //       this.debounce(this.handleScronll)()
-        //     })
-        //   }
-        //   document.getElementById('container').addEventListener('scroll', () => {
-        //     this.debounce(this.handleScronll)()
-        //     console.log(222)
-        //   })
-        // })
-        console.log(1, this.config)
-        console.log(this.skusinfo)
-        this.isShow = true
-        this.onInit()
+        let data = JSON.parse(response.data.JsonData.data)
+        let other = data.data.find(key => {
+          return key.type === 'other'
+        })
+        this.shareData = other.share
+        if (other && new Date() > new Date(other.endDate)) {
+          window.location.href = 'http://m.34580.com/Error_msg/index?msg=%E8%AF%A5%E5%95%86%E5%93%81%E4%B8%8D%E5%AD%98%E5%9C%A8%EF%BC%81'
+        } else {
+          this.skusinfo = response.data.JsonData.skusinfo
+          this.config = data
+          console.log(1, this.config)
+          console.log(this.skusinfo)
+          this.isShow = true
+          this.onInit()
+        }
       }).catch(error => {
         console.log(error)
       })
@@ -124,23 +126,25 @@
     },
     methods: {
       Observe () {
-        this.$nextTick(() => {
-          let imgs = document.querySelectorAll('.lazy-load')
-          Array.from(imgs).forEach(el => {
-            if ((!!el.getAttribute('data-src')) && this.isInsight(el)) {
-              this.loadImg(el)
-            }
-          })
+        this.imgs = document.querySelectorAll('.lazy-load')
+        Array.from(this.imgs).some(el => {
+          if ((!!el.getAttribute('data-src')) && this.isInsight(el)) {
+            this.loadImg(el)
+          } else {
+            return true
+          }
         })
       },
       isInsight (el) {
         let obj = el.getBoundingClientRect()
         let clientHeight = window.innerHeight
-        return obj.top <= clientHeight + 100
+        console.log(obj.top, clientHeight)
+        return obj.top <= clientHeight + 50
       },
       loadImg (el) {
         el.src = el.getAttribute('data-src')
         el.removeAttribute('data-src')
+        el.className = ''
       },
       onInit () {
         this.config.data.forEach(key => {
@@ -152,7 +156,11 @@
             })
           }
         })
-        this.Observe()
+        // 微信分享初始化
+        this.wxShareInit()
+        this.$nextTick(() => {
+          this.Observe()
+        })
       },
       calcMargin (data) {
         let str = ''
@@ -175,6 +183,7 @@
       backToTop () {
         this.animate(0, 200)
         document.getElementById('toTop').style.display = 'none'
+        this.activeNav = 0
       },
       goTo (val) {
         let target = document.getElementById(val)
@@ -260,6 +269,62 @@
       },
       changeActive (val) {
         this.activeNav = val
+      },
+      wxShareInit () {
+        let url = encodeURIComponent(window.location.href.split('#')[0])
+        let data = this.shareData
+        getWxConfig(url).then(response => {
+          if (response.data.status === 1) {
+            this.wxShare = response.data.jsonstr
+            wx.config({
+              debug: true,
+              appId: this.wxShare.appId,
+              timestamp: this.wxShare.timestamp,
+              nonceStr: this.wxShare.nonceStr,
+              signature: this.wxShare.signature,
+              jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'showOptionMenu', 'hideMenuItems'] // 必填
+            })
+            wx.ready(function () {
+              wx.showOptionMenu()
+              wx.hideMenuItems({
+                menuList: [
+                  'menuItem:share:qq',
+                  'menuItem:share:weiboApp',
+                  'menuItem:share:facebook',
+                  'menuItem:share:QZone',
+                  'menuItem:share:email',
+                  'menuItem:openWithSafari',
+                  'menuItem:openWithQQBrowser',
+                  'menuItem:readMode',
+                  'menuItem:originPage',
+                  'menuItem:copyUrl',
+                  'menuItem:delete',
+                  'menuItem:editTag'
+                ]
+              })
+              wx.onMenuShareTimeline({
+                title: data.title,
+                link: window.location.href.split('?')[0],
+                desc: data.content,
+                imgUrl: data.url,
+                success: function () {
+                  // 回调
+                  console.log('分享成功')
+                }
+              })
+              wx.onMenuShareAppMessage({
+                title: data.title,
+                link: window.location.href.split('?')[0],
+                desc: data.content,
+                imgUrl: data.url,
+                success: function () {
+                  // 回调
+                  console.log('分享成功')
+                }
+              })
+            })
+          }
+        })
       }
     }
 }
